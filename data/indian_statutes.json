@@ -1,0 +1,123 @@
+{
+  "companies_act_2013": {
+    "full_name": "The Companies Act, 2013",
+    "sections": {
+      "2": {
+        "title": "Definitions",
+        "description": "Key definitions for company law terms",
+        "keywords": ["company", "director", "member", "promoter"]
+      },
+      "3": {
+        "title": "Formation of company",
+        "description": "Requirements for company incorporation",
+        "keywords": ["incorporation", "formation", "registration"]
+      },
+      "149": {
+        "title": "Company to have Board of Directors",
+        "description": "Composition and requirements for Board of Directors",
+        "keywords": ["board", "directors", "independent director"]
+      },
+      "166": {
+        "title": "Duties of directors",
+        "description": "Fiduciary duties and responsibilities of directors",
+        "keywords": ["fiduciary duty", "care", "diligence", "conflict of interest"]
+      },
+      "188": {
+        "title": "Related party transactions",
+        "description": "Approval and disclosure of related party transactions",
+        "keywords": ["related party", "transactions", "approval", "disclosure"]
+      }
+    }
+  },
+  "it_act_2000": {
+    "full_name": "Information Technology Act, 2000",
+    "sections": {
+      "2": {
+        "title": "Definitions",
+        "description": "Definitions for IT and cyber law terms",
+        "keywords": ["computer", "data", "electronic record", "digital signature"]
+      },
+      "43": {
+        "title": "Penalty for damage to computer, computer system, etc.",
+        "description": "Liability for unauthorized access and data damage",
+        "keywords": ["unauthorized access", "computer damage", "penalty"]
+      },
+      "43A": {
+        "title": "Compensation for failure to protect data",
+        "description": "Corporate liability for data breaches and privacy violations",
+        "keywords": ["data protection", "privacy", "sensitive personal data", "compensation"]
+      },
+      "66": {
+        "title": "Computer related offences",
+        "description": "Criminal provisions for computer-related crimes",
+        "keywords": ["hacking", "computer fraud", "criminal offense"]
+      },
+      "72": {
+        "title": "Breach of confidentiality and privacy",
+        "description": "Protection of confidential electronic information",
+        "keywords": ["confidentiality", "privacy breach", "electronic information"]
+      }
+    }
+  },
+  "contract_act_1872": {
+    "full_name": "Indian Contract Act, 1872",
+    "sections": {
+      "2": {
+        "title": "Interpretation clause",
+        "description": "Definitions of contract, agreement, promise, etc.",
+        "keywords": ["contract", "agreement", "promise", "consideration"]
+      },
+      "10": {
+        "title": "What agreements are contracts",
+        "description": "Essential elements of a valid contract",
+        "keywords": ["free consent", "competent parties", "lawful consideration", "lawful object"]
+      },
+      "14": {
+        "title": "Free consent defined",
+        "description": "Definition and requirements for free consent",
+        "keywords": ["free consent", "coercion", "fraud", "misrepresentation"]
+      },
+      "23": {
+        "title": "What consideration and objects are lawful",
+        "description": "Lawfulness of consideration and object",
+        "keywords": ["lawful consideration", "public policy", "illegal object"]
+      },
+      "73": {
+        "title": "Compensation for loss or damage caused by breach of contract",
+        "description": "Damages for breach of contract",
+        "keywords": ["breach", "damages", "compensation", "remoteness"]
+      }
+    }
+  },
+  "labour_codes": {
+    "full_name": "Labour Codes (2019-2020)",
+    "industrial_relations_code": {
+      "sections": {
+        "2": {
+          "title": "Definitions",
+          "description": "Definitions for industrial relations terms",
+          "keywords": ["worker", "employer", "industrial dispute", "strike"]
+        },
+        "25": {
+          "title": "Conditions precedent to retrenchment of workmen",
+          "description": "Requirements for employee retrenchment",
+          "keywords": ["retrenchment", "notice", "compensation", "last in first out"]
+        }
+      }
+    },
+    "wages_code": {
+      "sections": {
+        "2": {
+          "title": "Definitions", 
+          "description": "Definitions for wage-related terms",
+          "keywords": ["wages", "employee", "employer", "salary"]
+        },
+        "5": {
+          "title": "Right to receive wages",
+          "description": "Fundamental right to wages and timely payment",
+          "keywords": ["wage payment", "timely payment", "minimum wages"]
+        }
+      }
+    }
+  }
+}
