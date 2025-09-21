@@ -2,6 +2,12 @@
 
 AI-powered platform for rapid Indian‐law document review
 
+## 🎯 Live Demo
+
+**[🚀 Try Legal Eagle Live](https://swastidip-legal-eagle-ultimate.streamlit.app/)**
+
+*Experience our AI-powered legal document analysis platform in action!*
+
 ## 🚀 Quick Start
 
 ```bash
