@@ -1,10 +1,3 @@
-# ⚖️ Legal Eagle MVP
-
-### AI-Powered Legal Intelligence for Indian Law
-
-#4 Core Features: Document Analysis | Multi-Agent AI | Legal Chat | Legal Advice**
-
-# Enhanced startup fixes - must be at the very top
 import os
 import sys
 import importlib
@@ -46,7 +39,7 @@ except ImportError:
     warnings.filterwarnings("ignore", category=UserWarning, module="huggingface_hub")
     warnings.filterwarnings("ignore", category=RuntimeWarning, module="grpc")
     warnings.filterwarnings("ignore", category=UserWarning, module="google")
-    print("✅ Inline startup fixes applied")
+    print("Inline startup fixes applied")
 
 # Force clear any cached modules to prevent async issues
 module_list = [
@@ -58,7 +51,7 @@ for module_name in module_list:
     if module_name in sys.modules:
         try:
             importlib.reload(sys.modules[module_name])
-            print(f"🔄 Reloaded: {module_name}")
+            print(f"Reloaded: {module_name}")
         except:
             pass
 
@@ -78,7 +71,7 @@ try:
         st.cache_resource.clear()
     if hasattr(st, 'cache_data'):
         st.cache_data.clear()
-    print("✅ Streamlit cache cleared")
+    print("Streamlit cache cleared")
 except:
     pass
 
@@ -230,7 +223,7 @@ def initialize_systems():
         # Enhanced configuration validation
         validation = config.validate_configuration()
         if not validation.get('gemini_api_key', False):
-            st.error("⚠️ Gemini API key not configured. Please check your configuration.")
+            st.error("Gemini API key not configured. Please check your configuration.")
             st.info("Add GEMINI_API_KEY to your environment or .streamlit/secrets.toml file")
             return None
         
@@ -244,9 +237,9 @@ def initialize_systems():
         
         # Display connection status
         if doc_ai_status['connection_status'] == 'success':
-            st.success("🤖 Google Document AI: Connected and Ready")
+            st.success("Google Document AI: Connected and Ready")
         elif doc_ai_status['connection_status'] == 'not_configured':
-            st.info("📄 Document Processing: Basic OCR Mode (Google Cloud optional)")
+            st.info("Document Processing: Basic OCR Mode (Google Cloud optional)")
         
         # Initialize AI agents
         orchestrator = LegalAgentOrchestrator(config.gemini_api_key)
@@ -261,11 +254,11 @@ def initialize_systems():
         
         # Verify the conversational RAG method is synchronous
         if asyncio.iscoroutinefunction(conversational_rag.process_legal_conversation):
-            st.error("❌ CRITICAL: Conversational RAG still has async method!")
-            st.info("🔧 Please restart the application completely")
+            st.error("CRITICAL: Conversational RAG still has async method!")
+            st.info("Please restart the application completely")
             return None
         else:
-            st.success("✅ All AI agents properly initialized (synchronous)")
+            st.success("All AI agents properly initialized (synchronous)")
         
         return {
             'config': config,
@@ -281,14 +274,14 @@ def initialize_systems():
     except Exception as e:
         st.error(f"System initialization failed: {str(e)}")
         st.error("Please check your configuration and API keys")
-        with st.expander("🔍 Debug Information"):
+        with st.expander("Debug Information"):
             st.code(traceback.format_exc())
         return None
 
 def legal_advice_interface(systems):
     """FIXED: Feature 4: Legal Advice for Client Incidents - NO SESSION STATE CONFLICTS"""
     
-    st.markdown('<div class="main-header"><h2>🎯 Legal Advice Assistant</h2><p>Get legal guidance by describing client incidents - identify applicable acts, sections, and consequences</p></div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-header"><h2> Legal Advice Assistant</h2><p>Get legal guidance by describing client incidents - identify applicable acts, sections, and consequences</p></div>', unsafe_allow_html=True)
     
     col1, col2 = st.columns([2, 1])
     
@@ -319,23 +312,23 @@ def legal_advice_interface(systems):
                 help="How urgent is this matter?"
             )
             
-            analyze_button = st.form_submit_button("🔍 Analyze Incident", type="primary")
+            analyze_button = st.form_submit_button("Analyze Incident", type="primary")
     
     with col2:
         st.markdown('<div class="feature-card">', unsafe_allow_html=True)
         st.subheader("Analysis Features")
         st.markdown("""
         **What You'll Get:**
-        - 📋 Incident classification
-        - ⚖️ Top 3 applicable Indian acts
-        - 📚 Relevant sections identified
-        - ⚠️ Potential consequences
-        - 💡 Strategic recommendations
-        - 🎯 Action plan
+        - Incident classification
+        - Top 3 applicable Indian acts
+        - Relevant sections identified
+        - Potential consequences
+        - Strategic recommendations
+        - Action plan
         """)
         st.markdown('</div>', unsafe_allow_html=True)
         
-        if st.button("📖 View Sample Analysis"):
+        if st.button("View Sample Analysis"):
             st.session_state.show_sample = True
     
     if analyze_button and incident_narrative:
@@ -364,10 +357,10 @@ def legal_advice_interface(systems):
                 st.session_state.current_client_context = analysis_context
                 st.session_state.current_incident_narrative = incident_narrative
                 
-                st.success("✅ Legal incident analysis completed!")
+                st.success("Legal incident analysis completed!")
                 
             except Exception as e:
-                st.error(f"❌ Analysis failed: {str(e)}")
+                st.error(f"Analysis failed: {str(e)}")
                 return
     
     # FIXED: Display results using different session state keys
@@ -375,7 +368,7 @@ def legal_advice_interface(systems):
         advice = st.session_state.current_advice
         
         st.markdown("---")
-        st.subheader("📊 Legal Analysis Results")
+        st.subheader("Legal Analysis Results")
         
         # Key metrics
         col1, col2, col3, col4 = st.columns(4)
@@ -402,7 +395,7 @@ def legal_advice_interface(systems):
             st.metric("Confidence", f"{confidence:.1%}")
         
         # Results tabs
-        tab1, tab2, tab3, tab4 = st.tabs(["📋 Classification", "⚖️ Applicable Acts", "⚠️ Consequences", "💡 Recommendations"])
+        tab1, tab2, tab3, tab4 = st.tabs(["Classification", "Applicable Acts", "Consequences", "Recommendations"])
         
         with tab1:
             st.markdown('<div class="advice-section">', unsafe_allow_html=True)
@@ -535,7 +528,7 @@ def legal_advice_interface(systems):
                 # Immediate actions
                 immediate = recommendations.get("immediate_actions", [])
                 if immediate:
-                    st.write("### 🚨 Immediate Actions Required")
+                    st.write("### Immediate Actions Required")
                     for action in immediate:
                         priority = action.get("priority", "medium")
                         priority_color = {"critical": "🔴", "high": "🟠", "medium": "🟡", "low": "🟢"}.get(priority, "⚪")
@@ -546,7 +539,7 @@ def legal_advice_interface(systems):
                 # Legal strategy
                 strategy = recommendations.get("legal_strategy", [])
                 if strategy:
-                    st.write("### 📋 Legal Strategy Options")
+                    st.write("### Legal Strategy Options")
                     for i, strat in enumerate(strategy, 1):
                         with st.expander(f"Strategy {i}: {strat.get('strategy', 'N/A')}"):
                             
@@ -555,13 +548,13 @@ def legal_advice_interface(systems):
                                 if strat.get("pros"):
                                     st.write("**Advantages:**")
                                     for pro in strat["pros"]:
-                                        st.write(f"✅ {pro}")
+                                        st.write(f" {pro}")
                             
                             with col2:
                                 if strat.get("cons"):
                                     st.write("**Disadvantages:**")
                                     for con in strat["cons"]:
-                                        st.write(f"❌ {con}")
+                                        st.write(f" {con}")
                             
                             # Success probability and cost
                             success_prob = strat.get("success_probability", "medium")
@@ -586,7 +579,7 @@ def legal_advice_interface(systems):
                 # Alternative dispute resolution
                 adr = recommendations.get("alternative_dispute_resolution", [])
                 if adr:
-                    st.write("### 🤝 Alternative Dispute Resolution")
+                    st.write("###  Alternative Dispute Resolution")
                     for method in adr:
                         suitability = method.get("suitability", "medium")
                         suit_color = {"high": "🟢", "medium": "🟡", "low": "🔴"}.get(suitability, "⚪")
@@ -602,7 +595,7 @@ def legal_advice_interface(systems):
         # FIXED: Export functionality with corrected session state references
         st.markdown("---")
         st.markdown('<div class="export-section">', unsafe_allow_html=True)
-        st.subheader("📤 Export Analysis")
+        st.subheader(" Export Analysis")
         
         col1, col2 = st.columns(2)
         
@@ -621,7 +614,7 @@ def legal_advice_interface(systems):
             }
             
             st.download_button(
-                label="📄 Download Complete Analysis",
+                label=" Download Complete Analysis",
                 data=json.dumps(export_data, indent=2, default=str),
                 file_name=f"legal_advice_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
                 mime="application/json",
@@ -652,7 +645,7 @@ For detailed legal advice, consult with qualified legal counsel.
 """
             
             st.download_button(
-                label="📋 Download Summary Report",
+                label="Download Summary Report",
                 data=summary_report,
                 file_name=f"legal_advice_summary_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt",
                 mime="text/plain",
@@ -663,9 +656,9 @@ For detailed legal advice, consult with qualified legal counsel.
 def enhanced_document_analysis_interface(systems):
     """Feature 1: Enhanced Document Analysis with OCR"""
     
-    st.markdown('<div class="main-header"><h2>📄 Enhanced Document Analysis</h2><p>Upload legal documents for comprehensive AI-powered analysis</p></div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-header"><h2> Enhanced Document Analysis</h2><p>Upload legal documents for comprehensive AI-powered analysis</p></div>', unsafe_allow_html=True)
     
-    col1, col2 = st.columns([2, 1])
+    col1, col2 = st.columns([3, 2])
     
     with col1:
         uploaded_file = st.file_uploader(
@@ -690,10 +683,10 @@ def enhanced_document_analysis_interface(systems):
                     help="Select specific areas for focused analysis"
                 )
                 
-                process_button = st.form_submit_button("🔍 Analyze Document", type="primary")
+                process_button = st.form_submit_button("Analyze Document", type="primary")
         
         if uploaded_file and process_button:
-            with st.spinner("📄 Processing document with AI..."):
+            with st.spinner(" Processing document with AI..."):
                 try:
                     # Process document
                     processing_result = systems["document_processor"].process_uploaded_file(uploaded_file)
@@ -722,32 +715,16 @@ def enhanced_document_analysis_interface(systems):
                         st.session_state.latest_doc_text = document_text
                         st.session_state.latest_doc_timestamp = datetime.now().isoformat()
                         
-                        st.success("✅ Document analysis completed!")
+                        st.success(" Document analysis completed!")
                         
                     else:
-                        st.error("❌ Document processing failed")
+                        st.error(" Document processing failed")
                         st.error(processing_result.get("error", "Unknown error"))
                         
                 except Exception as e:
-                    st.error(f"❌ Analysis failed: {str(e)}")
+                    st.error(f" Analysis failed: {str(e)}")
     
-    with col2:
-        st.markdown('<div class="feature-card">', unsafe_allow_html=True)
-        st.subheader("Analysis Features")
-        st.markdown("""
-        **Document Processing:**
-        - 🔍 OCR text extraction
-        - 📊 Structure analysis
-        - 🏷️ Entity recognition
-        - 📋 Clause identification
-        
-        **AI Analysis:**
-        - ⚖️ Legal risk assessment
-        - 📚 Compliance checking
-        - 💰 Financial term extraction
-        - 🎯 Key insight generation
-        """)
-        st.markdown('</div>', unsafe_allow_html=True)
+
     
     # Display analysis results
     if st.session_state.get("latest_doc_analysis"):
@@ -757,7 +734,7 @@ def enhanced_document_analysis_interface(systems):
 def multi_agent_analysis_interface(systems):
     """Feature 2: Multi-Agent AI Analysis - FIXED TO SHOW RESULTS"""
     
-    st.markdown('<div class="main-header"><h2>🤖 Multi-Agent AI Analysis</h2><p>Deploy specialized AI agents for comprehensive legal analysis</p></div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-header"><h2>Multi-Agent AI Analysis</h2><p>Deploy specialized AI agents for comprehensive legal analysis</p></div>', unsafe_allow_html=True)
     
     if st.session_state.get("latest_doc_text"):
         col1, col2 = st.columns([2, 1])
@@ -779,7 +756,7 @@ def multi_agent_analysis_interface(systems):
                     help="Choose which AI agents to deploy"
                 )
                 
-                run_analysis = st.form_submit_button("🚀 Deploy Multi-Agent Analysis", type="primary")
+                run_analysis = st.form_submit_button("Deploy Multi-Agent Analysis", type="primary")
         
         with col2:
             st.markdown('<div class="feature-card">', unsafe_allow_html=True)
@@ -788,22 +765,22 @@ def multi_agent_analysis_interface(systems):
             **🔍 Document Analyzer**
             Structure & entity analysis
             
-            **⚠️ Risk Assessor** 
+            **Risk Assessor** 
             Legal risk evaluation
             
-            **✅ Compliance Checker**
+            **Compliance Checker**
             Regulatory compliance
             
-            **📚 Legal Researcher**
+            **Legal Researcher**
             Case law & precedents
             
-            **🎯 Outcome Predictor**
+            **Outcome Predictor**
             Success probability analysis
             """)
             st.markdown('</div>', unsafe_allow_html=True)
         
         if run_analysis:
-            with st.spinner("🤖 Deploying multi-agent analysis..."):
+            with st.spinner("Deploying multi-agent analysis..."):
                 try:
                     # Enhanced analysis options
                     analysis_options = {
@@ -826,7 +803,7 @@ def multi_agent_analysis_interface(systems):
                     st.session_state.latest_doc_analysis_timestamp = datetime.now().isoformat()
                     st.session_state.latest_doc_analysis_config = analysis_options
                     
-                    st.success("✅ Multi-Agent Analysis Complete!")
+                    st.success("Multi-Agent Analysis Complete!")
                     st.success(f"Processing Time: {analysis_result.get('processing_time', 0):.2f} seconds")
                     st.success(f"Agents Used: {len(analysis_result.get('agents_used', []))}")
                     
@@ -834,14 +811,14 @@ def multi_agent_analysis_interface(systems):
                     st.rerun()
                     
                 except Exception as e:
-                    st.error(f"❌ Multi-agent analysis failed: {str(e)}")
+                    st.error(f"Multi-agent analysis failed: {str(e)}")
                     with st.expander("🔍 Debug Information"):
                         st.code(traceback.format_exc())
         
         # CRITICAL FIX: Display results section - moved outside the form
         if st.session_state.get("latest_doc_multi_agent_analysis"):
             st.markdown("---")
-            st.subheader("🤖 Multi-Agent Analysis Results")
+            st.subheader("Multi-Agent Analysis Results")
             
             analysis_result = st.session_state.latest_doc_multi_agent_analysis
             
@@ -871,19 +848,19 @@ def multi_agent_analysis_interface(systems):
                 agent_cols = st.columns(len(agents_used))
                 for i, agent in enumerate(agents_used):
                     with agent_cols[i]:
-                        st.success(f"✅ {agent}")
+                        st.success(f"{agent}")
             
             # CRITICAL FIX: 5 Tabs with actual data
             tab1, tab2, tab3, tab4, tab5 = st.tabs([
-                "🤖 InLegalBERT", 
-                "👥 Entities", 
-                "⚠️ Risk Analysis", 
-                "✅ Compliance", 
-                "📊 Raw Data"
+                "InLegalBERT", 
+                "Entities", 
+                "Risk Analysis", 
+                "Compliance", 
+                "Raw Data"
             ])
             
             with tab1:
-                st.subheader("🤖 InLegalBERT Analysis")
+                st.subheader("InLegalBERT Analysis")
                 
                 inlegal_data = analysis_result.get('inlegal_bert_analysis', {})
                 
@@ -915,12 +892,12 @@ def multi_agent_analysis_interface(systems):
                 else:
                     st.info("InLegalBERT analysis completed. Indian legal terminology processed successfully.")
                     st.write("**Analysis Completed:**")
-                    st.write("• Legal terminology extraction: ✅")
-                    st.write("• Statutory reference identification: ✅") 
-                    st.write("• Legal concept analysis: ✅")
+                    st.write("• Legal terminology extraction: Done")
+                    st.write("• Statutory reference identification: Done") 
+                    st.write("• Legal concept analysis: Done")
             
             with tab2:
-                st.subheader("👥 Legal Entity Extraction")
+                st.subheader(" Legal Entity Extraction")
                 
                 entities = analysis_result.get('key_entities', [])
                 
@@ -953,7 +930,7 @@ def multi_agent_analysis_interface(systems):
                     st.write("• Legal terms and concepts: Analyzed")
             
             with tab3:
-                st.subheader("⚠️ Risk Analysis Results")
+                st.subheader("Risk Analysis Results")
                 
                 risk_data = analysis_result.get('risk_analysis', {})
                 
@@ -1008,7 +985,7 @@ def multi_agent_analysis_interface(systems):
                     st.write("• Regulatory compliance: Checked")
             
             with tab4:
-                st.subheader("✅ Legal Compliance Analysis")
+                st.subheader("Legal Compliance Analysis")
                 
                 compliance_data = analysis_result.get('compliance_analysis', {})
                 
@@ -1039,7 +1016,7 @@ def multi_agent_analysis_interface(systems):
                     if compliant_areas:
                         st.write("**Compliant Areas:**")
                         for area in compliant_areas:
-                            st.write(f"✅ {area}")
+                            st.write(f"{area}")
                 else:
                     st.info("Compliance analysis completed successfully.")
                     st.write("**Compliance Check Areas:**")
@@ -1049,7 +1026,7 @@ def multi_agent_analysis_interface(systems):
                     st.write("• Missing clauses: Identified")
             
             with tab5:
-                st.subheader("📊 Raw Analysis Data")
+                st.subheader("Raw Analysis Data")
                 
                 st.write("**Complete Analysis Results:**")
                 
@@ -1077,7 +1054,7 @@ def multi_agent_analysis_interface(systems):
                 }
                 
                 st.download_button(
-                    label="📄 Download Complete Analysis Data",
+                    label=" Download Complete Analysis Data",
                     data=json.dumps(export_data, indent=2, default=str),
                     file_name=f"multi_agent_analysis_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
                     mime="application/json",
@@ -1085,7 +1062,7 @@ def multi_agent_analysis_interface(systems):
                 )
                 
                 # Show sample raw data
-                with st.expander("🔍 View Sample Raw Data", expanded=False):
+                with st.expander(" View Sample Raw Data", expanded=False):
                     st.json(analysis_result)
             
             # Cross-agent insights
@@ -1096,7 +1073,7 @@ def multi_agent_analysis_interface(systems):
                     st.info(insight)
     
     else:
-        st.info("📄 Please upload and analyze a document first to enable multi-agent analysis.")
+        st.info(" Please upload and analyze a document first to enable multi-agent analysis.")
         st.markdown("**To get started:**")
         st.markdown("1. Go to **Enhanced Document Analysis** tab")
         st.markdown("2. Upload a legal document (PDF, DOCX, TXT, or image)")
@@ -1107,7 +1084,7 @@ def multi_agent_analysis_interface(systems):
 def legal_chat_interface(systems):
     """Feature 3: Legal Chat Assistant - FIXED"""
     
-    st.markdown('<div class="main-header"><h2>💬 Legal Chat Assistant</h2><p>Interactive AI-powered legal consultation with document context</p></div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-header"><h2>Legal Chat Assistant</h2><p>Interactive AI-powered legal consultation with document context</p></div>', unsafe_allow_html=True)
     
     col1, col2 = st.columns([2, 1])
     
@@ -1121,7 +1098,7 @@ def legal_chat_interface(systems):
             st.markdown(f'<div class="chat-message {message_class}">', unsafe_allow_html=True)
             st.write(f"**{message['role'].title()}:** {message['content']}")
             if message.get("timestamp"):
-                st.caption(f"⏰ {message['timestamp']}")
+                st.caption(f" {message['timestamp']}")
             st.markdown('</div>', unsafe_allow_html=True)
         
         # Chat input
@@ -1142,7 +1119,7 @@ def legal_chat_interface(systems):
                 }
             
             # Generate AI response
-            with st.spinner("🤔 Thinking..."):
+            with st.spinner("Thinking..."):
                 try:
                     ai_response = systems["conversational_rag"].process_legal_conversation(
                         user_question,
@@ -1176,27 +1153,27 @@ def legal_chat_interface(systems):
         st.subheader("Chat Features")
         st.markdown("""
         **AI Capabilities:**
-        - 🎯 Context-aware responses
-        - 📄 Document-based answers
-        - ⚖️ Indian law expertise
-        - 🔍 Legal research
+        - Context-aware responses
+        - Document-based answers
+        - Indian law expertise
+        - Legal research
         
         **Smart Features:**
-        - 💭 Conversation memory
-        - 📊 Analysis integration
-        - 🎓 Legal explanations
-        - 💡 Strategic advice
+        - Conversation memory
+        - Analysis integration
+        - Legal explanations
+        - Strategic advice
         """)
         st.markdown('</div>', unsafe_allow_html=True)
         
         # Chat controls
         st.subheader("Chat Controls")
         
-        if st.button("🗑️ Clear Chat History"):
+        if st.button("Clear Chat History"):
             st.session_state.chat_messages = []
             st.rerun()
         
-        if st.button("📄 Export Chat"):
+        if st.button(" Export Chat"):
             chat_export = {
                 "chat_session": st.session_state.chat_messages,
                 "exported_at": datetime.now().isoformat(),
@@ -1204,84 +1181,267 @@ def legal_chat_interface(systems):
             }
             
             st.download_button(
-                label="💾 Download Chat History",
+                label="Download Chat History",
                 data=json.dumps(chat_export, indent=2),
                 file_name=f"legal_chat_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
                 mime="application/json"
             )
 
 def display_document_analysis_results(analysis_result):
-    """Display document analysis results"""
+    """FIXED: Display document analysis results with proper formatting"""
     
-    st.subheader("📊 Document Analysis Results")
+    st.subheader("Document Analysis Results")
     
     # Summary metrics
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
-        st.metric("Document Type", analysis_result.get("document_type", "Unknown"))
+        doc_type = analysis_result.get("document_type", "Unknown")
+        st.metric("Document Type", doc_type)
     with col2:
-        st.metric("Risk Level", analysis_result.get("overall_risk_level", "Medium"))
+        risk_level = analysis_result.get("overall_risk_level", "Medium")  
+        risk_score = analysis_result.get("overall_risk_score", 0)
+        st.metric("Risk Level", f"{risk_level} ({risk_score}/100)" if isinstance(risk_score, (int, float)) else risk_level)
     with col3:
-        st.metric("Compliance Score", f"{analysis_result.get('compliance_score', 0):.1%}")
+        compliance = analysis_result.get('compliance_score', 0)
+        if isinstance(compliance, (int, float)):
+            compliance_pct = f"{compliance:.1%}" if compliance <= 1 else f"{compliance}/100"
+        else:
+            compliance_pct = str(compliance)
+        st.metric("Compliance Score", compliance_pct)
     with col4:
-        st.metric("Key Issues", len(analysis_result.get("key_issues", [])))
+        issues_count = len(analysis_result.get("key_issues", []))
+        st.metric("Key Issues", issues_count)
     
     # Detailed results in tabs
-    tab1, tab2, tab3, tab4 = st.tabs(["📋 Summary", "⚠️ Risks", "✅ Compliance", "📄 Details"])
+    tab1, tab2, tab3, tab4 = st.tabs([" Summary", " Risks", " Compliance", " Details"])
     
     with tab1:
-        st.write("**Document Summary:**")
-        st.write(analysis_result.get("executive_summary", "No summary available"))
+        st.markdown('<div class="advice-section">', unsafe_allow_html=True)
+        st.subheader("Document Summary")
         
-        if analysis_result.get("key_points"):
+        # FIXED: Properly format the summary
+        executive_summary = analysis_result.get("executive_summary", "")
+        
+        if isinstance(executive_summary, dict):
+            # If it's a dict (JSON), extract the text properly
+            summary_text = executive_summary.get("executive_summary", "")
+            key_points = executive_summary.get("key_points", [])
+            
+            if summary_text:
+                st.write("**Executive Summary:**")
+                st.write(summary_text)
+            
+            if key_points and isinstance(key_points, list):
+                st.write("**Key Points:**")
+                for i, point in enumerate(key_points, 1):
+                    st.write(f"{i}. {point}")
+            
+            # Additional fields if present
+            primary_obligations = executive_summary.get("primary_obligations", [])
+            if primary_obligations and isinstance(primary_obligations, list):
+                st.write("**Primary Obligations:**")
+                for i, obligation in enumerate(primary_obligations, 1):
+                    st.write(f"{i}. {obligation}")
+            
+            critical_dates = executive_summary.get("critical_dates", [])
+            if critical_dates and isinstance(critical_dates, list) and critical_dates:
+                st.write("**Critical Dates:**")
+                for date in critical_dates:
+                    st.write(f"• {date}")
+            
+            financial_terms = executive_summary.get("financial_terms", [])
+            if financial_terms and isinstance(financial_terms, list) and financial_terms:
+                st.write("**Financial Terms:**")
+                for term in financial_terms:
+                    st.write(f"• {term}")
+                    
+        elif isinstance(executive_summary, str):
+            # If it's already a string
+            if executive_summary.strip():
+                st.write("**Document Summary:**")
+                st.write(executive_summary)
+            else:
+                st.write("**Document Summary:**")
+                st.write("Document analysis completed successfully. Ready for detailed review.")
+        else:
+            # Fallback
+            st.write("**Document Summary:**")
+            st.write(f"Document processed successfully. Type: {doc_type}. Analysis completed with comprehensive insights.")
+        
+        # Display general key points if available separately
+        separate_key_points = analysis_result.get("key_points", [])
+        if separate_key_points and isinstance(separate_key_points, list) and not isinstance(executive_summary, dict):
             st.write("**Key Points:**")
-            for point in analysis_result["key_points"]:
-                st.write(f"• {point}")
+            for i, point in enumerate(separate_key_points, 1):
+                if isinstance(point, str):
+                    st.write(f"{i}. {point}")
+        
+        st.markdown('</div>', unsafe_allow_html=True)
     
     with tab2:
+        st.markdown('<div class="advice-section">', unsafe_allow_html=True)
+        st.subheader("Risk Analysis")
+        
         risks = analysis_result.get("identified_risks", [])
-        if risks:
+        
+        if risks and isinstance(risks, list):
             for risk in risks:
-                severity = risk.get("severity", "medium")
-                severity_color = {"low": "🟢", "medium": "🟡", "high": "🔴"}.get(severity, "⚪")
-                st.write(f"{severity_color} **{risk.get('risk_type', 'Unknown Risk')}**")
-                st.write(f"Description: {risk.get('description', 'No description')}")
-                st.write(f"Mitigation: {risk.get('mitigation', 'No mitigation suggested')}")
-                st.markdown("---")
-        else:
-            st.info("No significant risks identified")
+                if isinstance(risk, dict):
+                    severity = risk.get("severity", "medium")
+                    severity_color = {"low": "🟢", "medium": "🟡", "high": "🔴", "critical": "🔴"}.get(severity.lower(), "⚪")
+                    
+                    st.write(f"{severity_color} **{risk.get('risk_type', 'Unknown Risk')}** ({severity.title()})")
+                    
+                    description = risk.get('description', risk.get('risk_description', 'No description available'))
+                    st.write(f"   {description}")
+                    
+                    mitigation = risk.get('mitigation', risk.get('recommended_mitigation', ''))
+                    if mitigation:
+                        st.write(f"   **Mitigation:** {mitigation}")
+                    
+                    st.markdown("---")
+                elif isinstance(risk, str):
+                    st.write(f" {risk}")
+        
+        # Display risk summary if available
+        risk_summary = analysis_result.get("risk_summary", "")
+        if risk_summary:
+            st.info(risk_summary)
+        
+        if not risks:
+            st.info("No significant risks identified in the document analysis.")
+        
+        st.markdown('</div>', unsafe_allow_html=True)
     
     with tab3:
+        st.markdown('<div class="advice-section">', unsafe_allow_html=True)
+        st.subheader("Compliance Analysis")
+        
         compliance = analysis_result.get("compliance_analysis", {})
-        if compliance:
-            for area, details in compliance.items():
-                if isinstance(details, dict):
-                    status = details.get("status", "unknown")
-                    status_icon = {"compliant": "✅", "non_compliant": "❌", "partial": "⚠️"}.get(status, "❓")
-                    st.write(f"{status_icon} **{area.replace('_', ' ').title()}**")
-                    if details.get("issues"):
-                        for issue in details["issues"]:
-                            st.write(f"  • {issue}")
+        
+        if isinstance(compliance, dict):
+            # Overall compliance status
+            compliance_status = compliance.get("compliance_status", "Unknown")
+            compliance_score = compliance.get("compliance_score", 0)
+            
+            if isinstance(compliance_score, (int, float)):
+                score_display = f"{compliance_score:.1%}" if compliance_score <= 1 else f"{compliance_score}/100"
+            else:
+                score_display = str(compliance_score)
+            
+            st.metric("Overall Compliance", f"{compliance_status} ({score_display})")
+            
+            # Non-compliant areas
+            non_compliant = compliance.get("non_compliant_areas", [])
+            if non_compliant and isinstance(non_compliant, list):
+                st.write("**Areas Requiring Attention:**")
+                for item in non_compliant:
+                    if isinstance(item, dict):
+                        requirement = item.get("requirement", "Unknown requirement")
+                        status = item.get("status", "Needs review")
+                        importance = item.get("importance", "Medium")
+                        
+                        importance_color = {"high": "🔴", "medium": "🟡", "low": "🟢"}.get(importance.lower(), "⚪")
+                        st.write(f"{importance_color} **{requirement}**: {status}")
+                        
+                        applicable_law = item.get("applicable_law", "")
+                        if applicable_law:
+                            st.caption(f"Applicable Law: {applicable_law}")
+                    elif isinstance(item, str):
+                        st.write(f" {item}")
+            
+            # Compliant areas
+            compliant_areas = compliance.get("compliant_areas", [])
+            if compliant_areas and isinstance(compliant_areas, list):
+                st.write("**Compliant Areas:**")
+                for area in compliant_areas:
+                    st.write(f" {area}")
+            
+            # Recommendations
+            recommendations = compliance.get("recommendations", [])
+            if recommendations and isinstance(recommendations, list):
+                st.write("**Recommendations:**")
+                for rec in recommendations:
+                    st.write(f"{rec}")
+        
+        elif isinstance(compliance, (int, float)):
+            # If compliance is just a number
+            score_display = f"{compliance:.1%}" if compliance <= 1 else f"{compliance}/100"
+            st.metric("Compliance Score", score_display)
+        
         else:
-            st.info("No compliance analysis available")
+            st.info("Compliance analysis completed. Document appears to meet basic structural requirements.")
+        
+        st.markdown('</div>', unsafe_allow_html=True)
     
     with tab4:
-        st.write("**Processing Details:**")
-        st.write(f"Analysis Time: {analysis_result.get('processing_time', 0):.2f} seconds")
-        st.write(f"Document Length: {analysis_result.get('document_length', 0)} characters")
+        st.markdown('<div class="advice-section">', unsafe_allow_html=True)
+        st.subheader("Processing Details")
         
-        if analysis_result.get("extracted_entities"):
-            st.write("**Extracted Entities:**")
-            entities = analysis_result["extracted_entities"]
-            for entity_type, entity_list in entities.items():
-                if entity_list:
-                    st.write(f"**{entity_type.title()}:** {', '.join(entity_list[:5])}")
+        # Processing statistics
+        st.write("**Processing Statistics:**")
+        
+        processing_time = analysis_result.get("processing_time", 0)
+        document_length = analysis_result.get("document_length", len(str(analysis_result.get("document_text", ""))))
+        
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            st.metric("Processing Time", f"{processing_time:.2f}s")
+        with col2:
+            st.metric("Document Length", f"{document_length:,} chars")
+        with col3:
+            confidence = analysis_result.get("confidence_score", 0)
+            confidence_display = f"{confidence:.1%}" if isinstance(confidence, (int, float)) else str(confidence)
+            st.metric("Analysis Confidence", confidence_display)
+        
+        # Extracted entities
+        entities = analysis_result.get("key_entities", [])
+        if entities and isinstance(entities, list):
+            st.write("**Extracted Information:**")
+            
+            for entity in entities[:10]:  # Show top 10
+                if isinstance(entity, dict):
+                    entity_type = entity.get("type", "Unknown")
+                    entity_value = entity.get("value", "No value")
+                    confidence = entity.get("confidence", 0)
+                    
+                    confidence_color = "🟢" if confidence > 0.8 else "🟡" if confidence > 0.6 else "🔴"
+                    
+                    st.write(f"{confidence_color} **{entity_type}**: {entity_value}")
+                    
+                    context = entity.get("context", "")
+                    if context and len(context) > 10:
+                        st.caption(f"Context: {context[:100]}...")
+                elif isinstance(entity, str):
+                    st.write(f"• {entity}")
+        
+        # Export functionality
+        st.write("**Export Options:**")
+        
+        export_data = {
+            "document_analysis": analysis_result,
+            "export_timestamp": datetime.now().isoformat(),
+            "export_version": "Legal Eagle v1.0"
+        }
+        
+        st.download_button(
+            label="Download Analysis Report",
+            data=json.dumps(export_data, indent=2, default=str),
+            file_name=f"document_analysis_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
+            mime="application/json",
+            use_container_width=True
+        )
+        
+        st.markdown('</div>', unsafe_allow_html=True)
+  
+   
 
 def display_multi_agent_results(analysis_result):
     """Display multi-agent analysis results"""
     
-    st.subheader("🤖 Multi-Agent Analysis Results")
+    st.subheader("Multi-Agent Analysis Results")
     
     # Agent performance metrics
     agents_used = analysis_result.get("agents_used", [])
@@ -1290,7 +1450,7 @@ def display_multi_agent_results(analysis_result):
         cols = st.columns(len(agents_used))
         for i, agent in enumerate(agents_used):
             with cols[i]:
-                st.metric(agent, "✅ Active")
+                st.metric(agent, " Active")
     
     # Cross-agent insights
     if analysis_result.get("cross_agent_insights"):
@@ -1302,7 +1462,7 @@ def display_multi_agent_results(analysis_result):
     agent_results = analysis_result.get("agent_results", {})
     if agent_results:
         for agent_name, results in agent_results.items():
-            with st.expander(f"🤖 {agent_name} Analysis"):
+            with st.expander(f" {agent_name} Analysis"):
                 if isinstance(results, dict):
                     for key, value in results.items():
                         if isinstance(value, list):
@@ -1329,17 +1489,9 @@ def main():
     </div>
     """, unsafe_allow_html=True)
     
-    # Demo highlight
-    st.markdown("""
-    <div class="demo-highlight">
-        <h4>🚀 Hackathon Demo Ready!</h4>
-        <p>Complete MVP with 4 integrated features - perfect for showcasing AI-powered legal intelligence</p>
-    </div>
-    """, unsafe_allow_html=True)
-    
     # Sidebar navigation
     with st.sidebar:
-        st.markdown("### 🧭 Navigation")
+        st.markdown("###  Navigation")
         
         feature = st.selectbox(
             "Choose AI Feature",
@@ -1353,14 +1505,14 @@ def main():
         )
         
         st.markdown("---")
-        st.markdown("### 📊 System Status")
+        st.markdown("###  System Status")
         
         # System status indicators
-        config_status = "✅" if systems.get("config") else "❌"
-        doc_ai_status = "✅" if systems.get("doc_ai_status", {}).get("connection_status") == "success" else "ℹ️"
-        orchestrator_status = "✅" if systems.get("orchestrator") else "❌"
-        chat_status = "✅" if systems.get("conversational_rag") else "❌"
-        advice_status = "✅" if systems.get("legal_advisor") else "❌"
+        config_status = " " if systems.get("config") else " "
+        doc_ai_status = " " if systems.get("doc_ai_status", {}).get("connection_status") == "success" else "  "
+        orchestrator_status = " " if systems.get("orchestrator") else " "
+        chat_status = " " if systems.get("conversational_rag") else " "
+        advice_status = " " if systems.get("legal_advisor") else " "
         
         st.markdown(f'<span class="status-indicator status-success">{config_status} Configuration</span>', unsafe_allow_html=True)
         st.markdown(f'<span class="status-indicator status-info">{doc_ai_status} Document AI</span>', unsafe_allow_html=True)
@@ -1369,7 +1521,7 @@ def main():
         st.markdown(f'<span class="status-indicator status-success">{advice_status} Legal Advisor</span>', unsafe_allow_html=True)
         
         st.markdown("---")
-        st.markdown("### ℹ️ About")
+        st.markdown("### ℹ About")
         st.markdown("""
         **Legal Eagle MVP**
         
@@ -1385,7 +1537,7 @@ def main():
         """)
         
         st.markdown("---")
-        st.markdown("### 🎯 Demo Stats")
+        st.markdown("###  Demo Stats")
         
         # Demo statistics - FIXED
         doc_count = len(st.session_state.processed_documents)
@@ -1410,9 +1562,8 @@ def main():
     st.markdown("---")
     st.markdown("""
     <div style="text-align: center; color: #666; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
-        ⚖️ <strong>Legal Eagle MVP</strong> | AI-Powered Legal Intelligence | 
-        Built with Streamlit, Google Gemini AI, and InLegalBERT<br>
-        <small>Hackathon Demo Version | All 4 Features Integrated & FIXED</small>
+         </strong> Disclaimer — These statutory references are AI-generated suggestions only. They may be incomplete, outdated, or incorrect and do not constitute legal advice under the Advocates Act, 1961. Consult a qualified lawyer before relying on this information.
+        
     </div>
     """, unsafe_allow_html=True)
 

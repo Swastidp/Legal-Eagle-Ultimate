@@ -1,51 +1,91 @@
-# ⚖️ Legal Eagle - AI-Powered Legal Intelligence Platform
+# 🦅 Legal Eagle MVP
 
-**🌐 Live Demo:** [https://swastidip-legal-eagle-ultimate.streamlit.app/](https://swastidip-legal-eagle-ultimate.streamlit.app/)
+AI-powered platform for rapid Indian‐law document review
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://swastidip-legal-eagle-ultimate.streamlit.app/)
+## 🚀 Quick Start
 
-## 🚀 Overview
+```bash
+# clone & enter
+git clone https://github.com/<org>/legal-eagle.git && cd legal-eagle
+# install
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+# run
+streamlit run app.py
+```
 
-Legal Eagle is a cutting-edge AI-powered platform that revolutionizes legal document analysis for the Indian legal framework. Built with advanced multi-agent AI architecture, it transforms complex legal documents into actionable insights through intelligent analysis, risk assessment, and interactive consultation.
 
-## ✨ Key Features
+## 🧩 Core Features
 
-### 📄 Enhanced Document Analysis
-- **Multi-format support**: PDF, DOCX, TXT, JPG, PNG files up to 10MB
-- **Google Document AI integration**: Superior OCR with table/form recognition
-- **Intelligent text extraction**: Clean, accurate extraction from scanned documents
-- **Document metadata analysis**: Comprehensive file processing statistics
-- **Cloud-safe fallbacks**: Works seamlessly in any deployment environment
+| Feature | What it does | Key tech |
+| :-- | :-- | :-- |
+| **Enhanced Document Analysis** | OCR + metadata + clause segmentation | Google Document AI, pdfplumber |
+| **Multi-Agent AI** | Risk, compliance, entity, statute \& summary agents | Orchestrator + Gemini-2 |
+| **Legal Chat Assistant** | Context-aware Q\&A over uploads | RAG + conversation memory |
+| **Incident-Based Advice** | Maps user scenarios to Indian acts \& sections | LegalAdviceAgent |
 
-### 🤖 Multi-Agent AI Analysis
-- **InLegalBERT integration**: Specialized Indian legal text processing
-- **Document-specific insights**: Curated analysis based on actual content (not generic responses)
-- **Entity extraction**: Automatic identification of parties, dates, amounts, legal terms
-- **Risk assessment**: Automated scoring (0-100) with severity classification
-- **Compliance checking**: Validation against Indian legal framework
-- **5 specialized AI agents**: Working in concert for comprehensive analysis
 
-### 💬 Legal Chat Assistant
-- **Document-context conversations**: Ask specific questions about uploaded documents
-- **Indian law expertise**: Specialized responses for Indian Contract Act, Companies Act, etc.
-- **Conversation history**: Persistent chat context and memory
-- **Quick question templates**: Pre-defined queries for common legal concerns
-- **Source attribution**: Track information sources and confidence scoring
+***
 
-## 🛠️ Technology Stack
+## 🔍 InLegalBERT Integration
 
-- **Frontend**: Streamlit with responsive, professional UI
-- **AI Models**: Gemini 2.0 Flash Experimental + InLegalBERT simulation
-- **Document Processing**: PyPDF2, python-docx, PIL, pytesseract
-- **Cloud Integration**: Google Document AI (optional enhancement)
-- **Deployment**: Streamlit Cloud with secrets management
-- **Languages**: Python 3.8+
+*InLegalBERT is an open-source BERT model fine-tuned on Indian case law, statutes, and contract corpora.*
+Compared with generic BERT or GPT checkpoints it excels at:
 
-## 🎯 Target Use Cases
+- Legal term disambiguation (e.g., “consideration” vs “consideration money”)
 
-- **Legal Professionals**: Contract analysis, risk assessment, compliance checking
-- **Businesses**: Document review, legal risk evaluation, compliance monitoring  
-- **Individuals**: Understanding legal documents, obligations, and rights
-- **Law Firms**: Automated document processing and client consultation
-- **Startups**: Legal document validation and risk mitigation
+- Section/act retrieval (“Section 73, Indian Contract Act 1872”)
 
+- Judgment sentiment & ratio extraction
+
+- Named-entity recognition for Indian-specific parties, courts, provisions
+
+Current use
+
+1. “InLegalBERTProcessor” agent → statute/section spotting
+2. Creates embeddings that boost recall in Legal Chat
+3. Feeds clause tags to Risk \& Compliance agents
+
+Planned upgrades
+
+- Vector store with pgvector for cross-document queries
+- Few-shot fine-tuning on compliance clauses (target F1 > 0.9)
+- Distilled mini-model for offline law-firm use
+
+
+
+***
+
+## 🖥️ Architecture
+
+```
+┌──────────────┐   OCR/DocAI   ┌──────────────┐
+│ Document U/I │──────────────▶│ DocProcessor │
+└──────────────┘               └────┬─────────┘
+                                    │ text
+                      ┌─────────────▼─────────────┐
+                      │  Multi-Agent Orchestrator │
+                      └┬────────┬──────┬──────────┘
+                       │        │      │
+       entities/risks  │  chat  │ advice
+               ┌───────▼───┐ ┌──▼─────▼──┐
+               │ Streamlit │ │  Gemini-2 │ …
+               └───────────┘ └───────────┘
+```
+
+
+***
+
+## 🏗️ Roadmap
+
+- [ ] Full-text vector search across thousands of contracts
+- [ ] Clause-level red-flag report PDF export
+- [ ] Admin dashboard for model \& usage analytics
+- [ ] Continuous fine-tuning with anonymised feedback data
+
+***
+
+## ⚖️ Disclaimer
+
+This project provides **AI-generated information only** and is *not* legal advice.
+Always consult a qualified lawyer before acting on any output.
