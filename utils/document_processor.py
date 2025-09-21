@@ -2,6 +2,7 @@
 Enhanced Document Processor with Cloud Deployment Support
 No Google Cloud dependencies - purely optional enhancement
 """
+
 import os
 import logging
 from typing import Dict, Any, Optional, BinaryIO
@@ -25,11 +26,83 @@ class DocumentProcessor:
         self.google_processor_name = None
         
         logger.info("Cloud-ready Document Processor initialized")
-    
+
+    def process_uploaded_file(self, uploaded_file) -> Dict[str, Any]:
+        """
+        Process uploaded file and return structured result
+        This method handles the complete file processing workflow
+        """
+        try:
+            if not uploaded_file:
+                return {
+                    "success": False,
+                    "error": "No file provided",
+                    "extracted_text": "",
+                    "metadata": {}
+                }
+            
+            # Get file metadata
+            metadata = self.get_document_metadata(uploaded_file)
+            
+            # Validate file
+            if not metadata.get("is_supported"):
+                return {
+                    "success": False,
+                    "error": f"Unsupported file format: {metadata.get('extension', 'unknown')}",
+                    "extracted_text": "",
+                    "metadata": metadata
+                }
+            
+            if not metadata.get("is_valid_size"):
+                return {
+                    "success": False,
+                    "error": f"File too large: {metadata.get('size_mb', 0)} MB (max: {self.max_file_size_mb} MB)",
+                    "extracted_text": "",
+                    "metadata": metadata
+                }
+            
+            # Extract text using the existing extract_text method
+            extracted_text = self.extract_text(uploaded_file)
+            
+            # Check if extraction was successful
+            if extracted_text.startswith("Error:"):
+                return {
+                    "success": False,
+                    "error": extracted_text,
+                    "extracted_text": "",
+                    "metadata": metadata
+                }
+            
+            # Successful processing
+            processing_result = {
+                "success": True,
+                "extracted_text": extracted_text,
+                "metadata": metadata,
+                "processing_stats": {
+                    "text_length": len(extracted_text),
+                    "word_count": len(extracted_text.split()),
+                    "processing_method": metadata.get("processing_mode", "standard"),
+                    "timestamp": datetime.now().isoformat()
+                }
+            }
+            
+            logger.info(f"Successfully processed {metadata.get('filename', 'unknown')}: {len(extracted_text)} characters extracted")
+            
+            return processing_result
+            
+        except Exception as e:
+            logger.error(f"File processing failed: {str(e)}")
+            return {
+                "success": False,
+                "error": f"Processing failed: {str(e)}",
+                "extracted_text": "",
+                "metadata": {}
+            }
+
     def test_document_ai_connection(self) -> Dict[str, Any]:
         """Cloud-safe Google Document AI connection test"""
         try:
-            # Check for Google Cloud configuration in Streamlit secrets or environment
+            # Cloud-safe Google Client initialization
             has_google_config = self._check_google_cloud_config()
             
             if not has_google_config:
@@ -57,7 +130,6 @@ class DocumentProcessor:
                         'message': f'Google Document AI configuration error: {client_result["error"]}',
                         'deployment_safe': True  # Still safe, just falls back to OCR
                     }
-            
             except Exception as e:
                 return {
                     'connection_status': 'error',
@@ -66,7 +138,6 @@ class DocumentProcessor:
                     'deployment_safe': True,
                     'fallback_message': 'Using standard OCR processing'
                 }
-                
         except Exception as e:
             # This should never fail in cloud deployment
             logger.warning(f"Document AI connection test failed safely: {e}")
@@ -76,7 +147,7 @@ class DocumentProcessor:
                 'message': 'Using standard OCR processing (cloud deployment safe)',
                 'deployment_safe': True
             }
-    
+
     def _check_google_cloud_config(self) -> bool:
         """Check if Google Cloud is configured without failing"""
         try:
@@ -96,13 +167,12 @@ class DocumentProcessor:
             # Method 2: Check environment variables
             google_project = os.getenv('GOOGLE_CLOUD_PROJECT')
             google_credentials = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
-            
             return bool(google_project and google_credentials)
             
         except Exception as e:
             logger.debug(f"Google config check failed safely: {e}")
             return False
-    
+
     def _initialize_google_client(self) -> Dict[str, Any]:
         """Initialize Google client with proper error handling"""
         try:
@@ -133,7 +203,6 @@ class DocumentProcessor:
                 if not credentials:
                     project_id = os.getenv('GOOGLE_CLOUD_PROJECT')
                     creds_path = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
-                    
                     if project_id and creds_path:
                         credentials = service_account.Credentials.from_service_account_file(creds_path)
                 
@@ -150,7 +219,6 @@ class DocumentProcessor:
                 # Set processor name (you would configure this in secrets)
                 processor_id = st.secrets.get('google_cloud', {}).get('processor_id', 'default-processor')
                 location = st.secrets.get('google_cloud', {}).get('location', 'us')
-                
                 self.google_processor_name = client.processor_path(project_id, location, processor_id)
                 self.google_client = client
                 
@@ -174,14 +242,13 @@ class DocumentProcessor:
                 'error': f'Client initialization failed: {str(e)}',
                 'safe_fallback': True
             }
-    
+
     def get_document_metadata(self, uploaded_file) -> Dict[str, Any]:
         """Get basic metadata from uploaded file - cloud safe"""
         try:
             # Get file information
             file_size = len(uploaded_file.getvalue()) if uploaded_file else 0
             file_size_mb = round(file_size / (1024 * 1024), 2)
-            
             filename = uploaded_file.name if uploaded_file else "unknown"
             extension = filename.split('.')[-1].lower() if '.' in filename else ""
             
@@ -219,7 +286,7 @@ class DocumentProcessor:
                 'processing_mode': 'standard',
                 'error': str(e)
             }
-    
+
     def extract_text(self, uploaded_file) -> str:
         """Extract text with cloud-safe fallbacks"""
         try:
@@ -271,7 +338,7 @@ class DocumentProcessor:
         except Exception as e:
             logger.error(f"Text extraction failed: {e}")
             return f"Error: Text extraction failed - {str(e)}"
-    
+
     def _extract_with_google_ai(self, uploaded_file) -> str:
         """Extract text using Google Document AI (cloud-safe)"""
         try:
@@ -306,12 +373,11 @@ class DocumentProcessor:
         except Exception as e:
             logger.error(f"Google Document AI extraction failed: {e}")
             return f"Error: Google Document AI extraction failed - {str(e)}"
-    
+
     def _extract_text_from_txt(self, uploaded_file) -> str:
         """Extract text from TXT file - cloud safe"""
         try:
             encodings = ['utf-8', 'latin-1', 'cp1252']
-            
             for encoding in encodings:
                 try:
                     uploaded_file.seek(0)
@@ -323,12 +389,10 @@ class DocumentProcessor:
                     return text
                 except UnicodeDecodeError:
                     continue
-            
             return "Error: Could not decode text file with any supported encoding"
-            
         except Exception as e:
             return f"Error reading TXT file: {str(e)}"
-    
+
     def _extract_text_from_pdf(self, uploaded_file) -> str:
         """Extract text from PDF file - cloud safe"""
         try:
@@ -361,7 +425,7 @@ class DocumentProcessor:
                 
         except Exception as e:
             return f"Error processing PDF file: {str(e)}"
-    
+
     def _extract_text_from_docx(self, uploaded_file) -> str:
         """Extract text from DOCX file - cloud safe"""
         try:
@@ -394,7 +458,7 @@ class DocumentProcessor:
             
         except Exception as e:
             return f"Error processing DOCX file: {str(e)}"
-    
+
     def _extract_text_from_image(self, uploaded_file) -> str:
         """Extract text from image using OCR - cloud safe"""
         try:
@@ -431,7 +495,7 @@ class DocumentProcessor:
                 
         except Exception as e:
             return f"Error processing image file: {str(e)}"
-    
+
     def get_processing_statistics(self) -> Dict[str, Any]:
         """Get processing statistics - cloud safe"""
         success_rate = (self.successful_processed / self.total_processed * 100) if self.total_processed > 0 else 0
