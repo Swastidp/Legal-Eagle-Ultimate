@@ -1,8 +1,7 @@
 """
 ENHANCED Multi-Agent Legal Document Orchestrator
-Provides SPECIFIC document-based analysis instead of generic templates
+Provides SPECIFIC document-based analysis with humanized results
 """
-
 import json
 import logging
 import time
@@ -14,12 +13,12 @@ import google.generativeai as genai
 logger = logging.getLogger(__name__)
 
 class LegalAgentOrchestrator:
-    """ENHANCED Multi-Agent System for Specific Document Analysis"""
+    """ENHANCED Multi-Agent System for Specific Document Analysis with Humanized Output"""
     
     def __init__(self, gemini_api_key: str):
         """Initialize with enhanced document-specific capabilities"""
         genai.configure(api_key=gemini_api_key)
-        self.gemini_model = genai.GenerativeModel('gemini-2.0-flash-exp')
+        self.gemini_model = genai.GenerativeModel("gemini-2.0-flash-exp")
         
         # Enhanced generation config for better analysis
         self.generation_config = genai.GenerationConfig(
@@ -29,70 +28,32 @@ class LegalAgentOrchestrator:
             max_output_tokens=3000,  # Increased for detailed analysis
         )
         
-        # Legal document type patterns for better classification
+        # Document type patterns for specific analysis
         self.document_patterns = {
-            "employment_agreement": [
-                "employment", "employee", "employer", "salary", "wages", "termination", 
-                "notice period", "job description", "work", "duties", "probation"
-            ],
-            "rental_agreement": [
-                "rent", "lease", "tenant", "landlord", "property", "premises", 
-                "monthly rent", "security deposit", "maintenance"
-            ],
-            "service_agreement": [
-                "service", "provider", "client", "deliverables", "scope of work",
-                "payment terms", "milestone", "project"
-            ],
-            "sale_deed": [
-                "sale", "purchase", "buyer", "seller", "property", "consideration",
-                "title", "ownership", "registration"
-            ],
-            "loan_agreement": [
-                "loan", "lender", "borrower", "principal", "interest", "repayment",
-                "collateral", "default", "emi"
-            ],
-            "partnership_deed": [
-                "partnership", "partner", "profit", "loss", "capital", "business",
-                "firm", "dissolution"
-            ],
-            "power_of_attorney": [
-                "power of attorney", "attorney", "principal", "agent", "authorize",
-                "behalf", "act for"
-            ],
-            "nda": [
-                "confidential", "non-disclosure", "confidentiality", "proprietary",
-                "trade secret", "information"
-            ],
-            "mou": [
-                "memorandum of understanding", "mou", "cooperation", "collaboration",
-                "understanding", "parties agree"
-            ],
-            "legal_notice": [
-                "legal notice", "notice", "demand", "breach", "violation", 
-                "remedy", "legal action"
-            ]
+            "employment_agreement": ["employment", "employee", "employer", "salary", "wages", "termination", "notice period", "job description", "work", "duties", "probation"],
+            "rental_agreement": ["rent", "lease", "tenant", "landlord", "property", "premises", "monthly rent", "security deposit", "maintenance"],
+            "service_agreement": ["service", "provider", "client", "deliverables", "scope of work", "payment terms", "milestone", "project"],
+            "sale_deed": ["sale", "purchase", "buyer", "seller", "property", "consideration", "title", "ownership", "registration"],
+            "loan_agreement": ["loan", "lender", "borrower", "principal", "interest", "repayment", "collateral", "default", "emi"],
+            "partnership_deed": ["partnership", "partner", "profit", "loss", "capital", "business", "firm", "dissolution"],
+            "power_of_attorney": ["power of attorney", "attorney", "principal", "agent", "authorize", "behalf", "act for"],
+            "nda": ["confidential", "non-disclosure", "confidentiality", "proprietary", "trade secret", "information"],
+            "mou": ["memorandum of understanding", "mou", "cooperation", "collaboration", "understanding", "parties agree"],
+            "legal_notice": ["legal notice", "notice", "demand", "breach", "violation", "remedy", "legal action"]
         }
         
-        logger.info("✅ Enhanced Legal Orchestrator initialized with document intelligence")
+        logger.info("Enhanced Legal Orchestrator initialized with document intelligence")
 
-    def comprehensive_document_analysis(
-        self, 
-        document_text: str, 
-        legal_jurisdiction: str = "Indian Law",
-        focus_areas: List[str] = None,
-        analysis_options: Dict = None
-    ) -> Dict[str, Any]:
-        """
-        ENHANCED: Provides SPECIFIC document-based analysis
-        """
+    def comprehensive_document_analysis(self, document_text: str, legal_jurisdiction: str = "Indian Law", focus_areas: List[str] = None, analysis_options: Dict = None) -> Dict[str, Any]:
+        """ENHANCED: Provides SPECIFIC document-based analysis with humanized results"""
         
         if not document_text or len(document_text.strip()) < 50:
             return self._create_minimal_document_fallback()
-        
+            
         start_time = time.time()
         
         try:
-            logger.info(f"🔍 Starting SPECIFIC analysis for {len(document_text)} character document")
+            logger.info(f"Starting SPECIFIC analysis for {len(document_text)} character document")
             
             # Step 1: Intelligent document classification
             doc_classification = self._intelligent_document_classification(document_text)
@@ -103,7 +64,7 @@ class LegalAgentOrchestrator:
             # Step 3: Perform targeted risk analysis
             risk_analysis = self._targeted_risk_analysis(document_text, doc_classification)
             
-            # Step 4: Document-specific compliance check
+            # Step 4: Document-specific compliance
             compliance_analysis = self._document_specific_compliance(document_text, doc_classification)
             
             # Step 5: Generate meaningful summary
@@ -111,10 +72,15 @@ class LegalAgentOrchestrator:
             
             processing_time = time.time() - start_time
             
-            # Create comprehensive analysis result
+            # NEW: Generate humanized results
+            humanized_results = self._generate_humanized_results(
+                document_text, doc_classification, extracted_entities, risk_analysis, compliance_analysis
+            )
+            
+            # Create comprehensive analysis result with humanized insights
             analysis_result = {
-                "analysis_id": f"analysis_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
-                "document_id": f"doc_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
+                "analysis_id": f"analysis-{datetime.now().strftime('%Y%m%d-%H%M%S')}",
+                "document_id": f"doc-{datetime.now().strftime('%Y%m%d-%H%M%S')}",
                 "document_text": document_text[:5000],  # Store first 5000 chars for context
                 "document_metadata": {
                     "length": len(document_text),
@@ -128,7 +94,6 @@ class LegalAgentOrchestrator:
                 "compliance_score": compliance_analysis.get("compliance_score", 0.65),
                 "confidence_score": doc_classification.get("classification_confidence", 0.75),
                 
-                # DETAILED ANALYSIS
                 "key_entities": extracted_entities,
                 "identified_risks": risk_analysis.get("risks", []),
                 "compliance_analysis": compliance_analysis,
@@ -136,14 +101,8 @@ class LegalAgentOrchestrator:
                 "key_issues": risk_analysis.get("key_issues", []),
                 "key_points": document_summary.get("key_points", []),
                 
-                # MULTI-AGENT RESULTS
-                "agents_used": [
-                    "DirectDocumentAnalyzer", 
-                    "SpecificEntityExtractor", 
-                    "DocumentRiskAnalyzer",
-                    "ComplianceChecker", 
-                    "InLegalBERTProcessor"
-                ],
+                # DETAILED ANALYSIS
+                "agents_used": ["DirectDocumentAnalyzer", "SpecificEntityExtractor", "DocumentRiskAnalyzer", "ComplianceChecker", "InLegalBERTProcessor"],
                 "agent_results": {
                     "DirectDocumentAnalyzer": {
                         "document_structure": doc_classification,
@@ -160,42 +119,136 @@ class LegalAgentOrchestrator:
                         "statutory_references": self._find_statutory_references(document_text)
                     }
                 },
-                "cross_agent_insights": self._generate_cross_agent_insights(
-                    doc_classification, extracted_entities, risk_analysis
-                ),
                 
-                # PROCESSING INFO
+                # NEW: Humanized results for better UI display
+                "humanized_results": humanized_results,
+                "document_classification": doc_classification,
+                
+                # MULTI-AGENT RESULTS
+                "cross_agent_insights": self._generate_cross_agent_insights(doc_classification, extracted_entities, risk_analysis),
                 "processing_time": processing_time,
                 "processed_at": datetime.now().isoformat(),
                 "document_length": len(document_text)
             }
             
-            logger.info(f"✅ Specific analysis completed: {doc_classification.get('document_type')} ({processing_time:.2f}s)")
-            
+            logger.info(f"Specific analysis completed: {doc_classification.get('document_type')} ({processing_time:.2f}s)")
             return analysis_result
             
         except Exception as e:
-            logger.error(f"❌ Enhanced analysis failed: {str(e)}")
+            logger.error(f"Enhanced analysis failed: {str(e)}")
             return self._create_error_fallback_analysis(document_text, str(e))
+
+    def _generate_humanized_results(self, document_text: str, classification: Dict, entities: List, risks: Dict, compliance: Dict) -> Dict[str, List[str]]:
+        """Generate human-friendly results for each agent"""
+        
+        humanized = {}
+        
+        # InLegalBERT Processor humanized results
+        legal_terms = self._extract_legal_terms(document_text)
+        statutory_refs = self._find_statutory_references(document_text)
+        
+        inlegal_analysis = []
+        if legal_terms:
+            inlegal_analysis.append(f"📚 **Legal Terminology Analysis**: Identified {len(legal_terms)} key legal terms including: {', '.join(legal_terms[:5])}")
+            
+            word_count = len(document_text.split())
+            density = (len(legal_terms) / word_count * 100) if word_count > 0 else 0
+            complexity = "high" if density > 5 else "moderate" if density > 2 else "low"
+            inlegal_analysis.append(f"🎯 **Legal Density**: This document contains {density:.1f}% legal terminology, indicating {complexity} legal complexity")
+        
+        if statutory_refs:
+            inlegal_analysis.append(f"⚖️ **Indian Legal Framework**: Document references {len(statutory_refs)} Indian legal acts/provisions")
+            for ref in statutory_refs[:3]:
+                inlegal_analysis.append(f"   • **{ref.get('act', 'Unknown Act')}**: {ref.get('relevance', 'Referenced in document')}")
+        
+        if legal_terms or statutory_refs:
+            inlegal_analysis.append(f"✅ **Analysis Completeness**: {len(legal_terms) + len(statutory_refs)} legal elements processed with high confidence")
+        
+        humanized["InLegalBERTProcessor"] = inlegal_analysis
+        
+        # Entity Extractor humanized results
+        entity_analysis = []
+        if entities:
+            entity_groups = {}
+            for entity in entities:
+                entity_type = entity.get('type', 'OTHER')
+                if entity_type not in entity_groups:
+                    entity_groups[entity_type] = []
+                entity_groups[entity_type].append(entity)
+            
+            for entity_type, entity_list in entity_groups.items():
+                if entity_type == 'MONETARY_AMOUNT':
+                    amounts = [e.get('value', 'Unknown') for e in entity_list]
+                    entity_analysis.append(f"💰 **Financial Terms**: Identified {len(amounts)} monetary amounts: {', '.join(amounts[:3])}")
+                elif entity_type == 'DATE':
+                    dates = [e.get('value', 'Unknown') for e in entity_list]
+                    entity_analysis.append(f"📅 **Important Dates**: {len(dates)} temporal references found: {', '.join(dates[:3])}")
+                elif entity_type == 'PERSON_NAME':
+                    names = [e.get('value', 'Unknown') for e in entity_list]
+                    entity_analysis.append(f"👥 **Parties Involved**: {len(names)} parties identified: {', '.join(names[:3])}")
+        else:
+            entity_analysis.append("ℹ️ **Entity Analysis**: No specific entities detected in this document")
+        
+        humanized["SpecificEntityExtractor"] = entity_analysis
+        
+        # Risk Analyzer humanized results
+        risk_analysis = []
+        overall_score = risks.get("overall_risk_score", 0)
+        risk_level = risks.get("risk_level", "Unknown")
+        risk_list = risks.get("risks", [])
+        
+        risk_emoji = "🔴" if risk_level == "High" else "🟡" if risk_level == "Medium" else "🟢"
+        risk_analysis.append(f"{risk_emoji} **Overall Risk Assessment**: {risk_level} Risk Level (Score: {overall_score}/100)")
+        
+        if risk_list:
+            risk_analysis.append(f"🔍 **Risk Areas Identified**: {len(risk_list)} potential risk factors found")
+            for i, risk in enumerate(risk_list[:5], 1):
+                severity = risk.get("severity", "Medium")
+                risk_type = risk.get("risk_type", "Unknown Risk")
+                description = risk.get("description", "No description available")
+                
+                severity_icon = "🔴" if severity == "High" else "🟡" if severity == "Medium" else "🟢"
+                risk_analysis.append(f"   {severity_icon} **{i}. {risk_type}** ({severity})")
+                risk_analysis.append(f"      _{description[:100]}..._")
+        
+        humanized["DocumentRiskAnalyzer"] = risk_analysis
+        
+        # Compliance Checker humanized results
+        compliance_analysis = []
+        compliance_score = compliance.get("compliance_score", 0)
+        compliance_status = compliance.get("compliance_status", "Unknown")
+        
+        status_emoji = "✅" if compliance_status == "Highly Compliant" else "⚠️" if "Compliant" in compliance_status else "❌"
+        compliance_analysis.append(f"{status_emoji} **Compliance Assessment**: {compliance_status} (Score: {compliance_score*100:.0f}/100)")
+        
+        compliant_areas = compliance.get("compliant_areas", [])
+        non_compliant_areas = compliance.get("non_compliant_areas", [])
+        
+        if compliant_areas:
+            compliance_analysis.append(f"✅ **Compliant Areas**: {len(compliant_areas)} areas meet regulatory requirements")
+        if non_compliant_areas:
+            compliance_analysis.append(f"❌ **Non-Compliant Areas**: {len(non_compliant_areas)} areas require attention")
+        
+        humanized["ComplianceChecker"] = compliance_analysis
+        
+        return humanized
 
     def _intelligent_document_classification(self, document_text: str) -> Dict[str, Any]:
         """Classify document type using content analysis and AI"""
         
-        # Step 1: Pattern-based classification
         text_lower = document_text.lower()
         classification_scores = {}
         
+        # Step 1: Pattern-based classification
         for doc_type, patterns in self.document_patterns.items():
             score = 0
             for pattern in patterns:
                 count = text_lower.count(pattern.lower())
                 if count > 0:
                     score += count * len(pattern.split())  # Weight by phrase length
-            
             if score > 0:
                 classification_scores[doc_type] = score
         
-        # Get best pattern match
         if classification_scores:
             best_pattern_match = max(classification_scores.items(), key=lambda x: x[1])
             primary_type = best_pattern_match[0].replace("_", " ").title()
@@ -205,8 +258,7 @@ class LegalAgentOrchestrator:
             confidence = 0.5
         
         # Step 2: AI-enhanced classification
-        classification_prompt = f"""
-Analyze this document excerpt and provide specific classification:
+        classification_prompt = f"""Analyze this document excerpt and provide specific classification:
 
 DOCUMENT EXCERPT (first 1500 chars):
 {document_text[:1500]}
@@ -215,7 +267,7 @@ Based on the content, classify this document and provide analysis in JSON format
 {{
     "document_type": "Specific document type (e.g., Employment Agreement, Rental Agreement, Service Contract, etc.)",
     "document_subtype": "More specific subtype if applicable",
-    "primary_purpose": "Main purpose of this document",
+    "primary_purpose": "Main purpose of this document", 
     "key_parties": ["Party 1 type", "Party 2 type"],
     "financial_elements": "Are there monetary terms? (Yes/No/Partial)",
     "legal_complexity": "Low/Medium/High",
@@ -223,19 +275,16 @@ Based on the content, classify this document and provide analysis in JSON format
     "content_indicators": ["Key phrases that indicate document type"]
 }}
 
-Focus on Indian legal document types and be specific.
-"""
-        
+Focus on Indian legal document types and be specific."""
+
         try:
             response = self.gemini_model.generate_content(
-                classification_prompt,
+                classification_prompt, 
                 generation_config=self.generation_config
             )
-            
             ai_classification = self._extract_json_from_response(response.text)
             
             if ai_classification:
-                # Combine pattern matching with AI results
                 return {
                     "document_type": ai_classification.get("document_type", primary_type),
                     "document_subtype": ai_classification.get("document_subtype", ""),
@@ -248,7 +297,6 @@ Focus on Indian legal document types and be specific.
                     "pattern_match": primary_type,
                     "pattern_confidence": confidence
                 }
-        
         except Exception as e:
             logger.warning(f"AI classification failed: {e}")
         
@@ -268,15 +316,13 @@ Focus on Indian legal document types and be specific.
 
     def _extract_specific_entities(self, document_text: str, doc_classification: Dict) -> List[Dict[str, Any]]:
         """Extract specific entities based on document type"""
-        
         entities = []
         
         # Extract monetary amounts
-        money_pattern = r'(?:Rs\.?|INR|₹)\s*(\d+(?:,\d+)*(?:\.\d+)?)|(\d+(?:,\d+)*(?:\.\d+)?)\s*(?:rupees?|lakhs?|crores?)'
+        money_pattern = r'₹\s*(\d+(?:,\d{3})*(?:\.\d{2})?)|Rs\.?\s*(\d+(?:,\d{3})*(?:\.\d{2})?)|rupees?\s*(\d+)|lakhs?\s*(\d+)|crores?\s*(\d+)'
         money_matches = re.finditer(money_pattern, document_text, re.IGNORECASE)
-        
         for match in money_matches:
-            amount = match.group(1) or match.group(2)
+            amount = match.group(1) or match.group(2) or match.group(3) or match.group(4) or match.group(5)
             entities.append({
                 "type": "MONETARY_AMOUNT",
                 "value": f"Rs. {amount}",
@@ -286,8 +332,8 @@ Focus on Indian legal document types and be specific.
         
         # Extract dates
         date_patterns = [
-            r'\b(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})\b',
-            r'\b(\d{1,2}(?:st|nd|rd|th)?\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{2,4})\b'
+            r'(\d{1,2}[-/]\d{1,2}[-/]\d{2,4})',
+            r'(\d{1,2}(?:st|nd|rd|th)?\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{2,4})'
         ]
         
         for pattern in date_patterns:
@@ -301,9 +347,8 @@ Focus on Indian legal document types and be specific.
                 })
         
         # Extract names (capitalize words that appear to be names)
-        name_pattern = r'\b([A-Z][a-z]+\s+[A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)\b'
+        name_pattern = r'\b([A-Z][a-z]+\s[A-Z][a-z]+(?:\s[A-Z][a-z]+)?)\b'
         name_matches = re.finditer(name_pattern, document_text)
-        
         name_count = {}
         for match in name_matches:
             name = match.group(1)
@@ -313,15 +358,15 @@ Focus on Indian legal document types and be specific.
         
         # Add names that appear multiple times (likely parties)
         for name, count in name_count.items():
-            if count > 1 and len(name.split()) >= 2:
+            if count > 1 and len(name.split()) <= 3:
                 entities.append({
                     "type": "PERSON_NAME",
                     "value": name,
                     "context": f"Appears {count} times in document",
-                    "confidence": min(0.95, 0.6 + (count * 0.1))
+                    "confidence": min(0.95, 0.6 + count * 0.1)
                 })
         
-        # Extract specific terms based on document type
+        # Document type specific entities
         doc_type = doc_classification.get("document_type", "").lower()
         
         if "employment" in doc_type:
@@ -358,10 +403,9 @@ Focus on Indian legal document types and be specific.
         # Remove duplicates and sort by confidence
         seen_values = set()
         unique_entities = []
-        
-        for entity in sorted(entities, key=lambda x: x["confidence"], reverse=True):
-            if entity["value"] not in seen_values:
-                seen_values.add(entity["value"])
+        for entity in sorted(entities, key=lambda x: x['confidence'], reverse=True):
+            if entity['value'] not in seen_values:
+                seen_values.add(entity['value'])
                 unique_entities.append(entity)
         
         return unique_entities[:15]  # Return top 15 entities
@@ -371,7 +415,6 @@ Focus on Indian legal document types and be specific.
         
         doc_type = doc_classification.get("document_type", "").lower()
         text_lower = document_text.lower()
-        
         identified_risks = []
         risk_score = 30  # Base score
         
@@ -388,11 +431,9 @@ Focus on Indian legal document types and be specific.
         
         for risk_type, indicators in risk_indicators.items():
             risk_count = sum(1 for indicator in indicators if indicator in text_lower)
-            
             if risk_count > 0:
-                severity = "High" if risk_count > 2 else "Medium" if risk_count > 1 else "Low"
+                severity = "High" if risk_count >= 2 else "Medium" if risk_count == 1 else "Low"
                 risk_score += risk_count * 5
-                
                 identified_risks.append({
                     "risk_type": risk_type.replace("_", " ").title(),
                     "severity": severity,
@@ -411,7 +452,7 @@ Focus on Indian legal document types and be specific.
                     "mitigation": "Add clear probation terms and evaluation criteria"
                 })
                 risk_score += 10
-            
+                
             if "notice period" not in text_lower:
                 identified_risks.append({
                     "risk_type": "Unclear Termination Notice",
@@ -420,7 +461,7 @@ Focus on Indian legal document types and be specific.
                     "mitigation": "Define clear notice periods for both parties"
                 })
                 risk_score += 15
-        
+                
         elif "rental" in doc_type:
             if "security deposit" not in text_lower:
                 identified_risks.append({
@@ -447,7 +488,12 @@ Focus on Indian legal document types and be specific.
             "risk_level": risk_level,
             "risks": identified_risks,
             "key_issues": [risk["risk_type"] for risk in identified_risks if risk["severity"] in ["High", "Critical"]],
-            "risk_summary": f"Identified {len(identified_risks)} potential risks across {len(set(risk['severity'] for risk in identified_risks))} severity levels"
+            "risk_summary": f"Identified {len(identified_risks)} potential risks across {len(set([risk['severity'] for risk in identified_risks]))} severity levels",
+            "mitigation_suggestions": [
+                "Review identified risk areas with legal counsel",
+                "Consider adding protective clauses",
+                "Ensure compliance with applicable laws"
+            ]
         }
 
     def _document_specific_compliance(self, document_text: str, doc_classification: Dict) -> Dict[str, Any]:
@@ -455,11 +501,10 @@ Focus on Indian legal document types and be specific.
         
         doc_type = doc_classification.get("document_type", "").lower()
         text_lower = document_text.lower()
-        
         compliance_checks = []
         compliance_score = 0.5  # Base score
         
-        # General compliance checks
+        # General compliance requirements
         general_requirements = {
             "parties_identification": ["party", "parties", "between"],
             "consideration_mentioned": ["consideration", "amount", "payment", "rs.", "rupees"],
@@ -475,7 +520,6 @@ Focus on Indian legal document types and be specific.
                 "importance": "High",
                 "found_indicators": [ind for ind in indicators if ind in text_lower] if found else []
             })
-            
             if found:
                 compliance_score += 0.1
         
@@ -491,13 +535,12 @@ Focus on Indian legal document types and be specific.
             for req, indicators in employment_requirements.items():
                 found = any(indicator in text_lower for indicator in indicators)
                 compliance_checks.append({
-                    "requirement": f"Employment: {req.replace('_', ' ').title()}",
+                    "requirement": f"Employment {req.replace('_', ' ').title()}",
                     "status": "Compliant" if found else "Needs Attention",
                     "importance": "Medium",
                     "applicable_law": "Industrial Relations Code 2020",
                     "found_indicators": [ind for ind in indicators if ind in text_lower] if found else []
                 })
-                
                 if found:
                     compliance_score += 0.05
         
@@ -512,13 +555,12 @@ Focus on Indian legal document types and be specific.
             for req, indicators in rental_requirements.items():
                 found = any(indicator in text_lower for indicator in indicators)
                 compliance_checks.append({
-                    "requirement": f"Rental: {req.replace('_', ' ').title()}",
-                    "status": "Compliant" if found else "Needs Attention",
+                    "requirement": f"Rental {req.replace('_', ' ').title()}",
+                    "status": "Compliant" if found else "Needs Attention", 
                     "importance": "High",
                     "applicable_law": "Transfer of Property Act 1882",
                     "found_indicators": [ind for ind in indicators if ind in text_lower] if found else []
                 })
-                
                 if found:
                     compliance_score += 0.05
         
@@ -543,19 +585,44 @@ Focus on Indian legal document types and be specific.
             "non_compliant_areas": [c for c in compliance_checks if c["status"] in ["Non-Compliant", "Needs Attention"]],
             "compliant_areas": [c["requirement"] for c in compliance_checks if c["status"] == "Compliant"],
             "detailed_compliance": compliance_checks,
-            "recommendations": [
-                f"Review {c['requirement']}" for c in compliance_checks 
-                if c["status"] in ["Non-Compliant", "Needs Attention"]
+            "recommendations": [f"Review {c['requirement']}" for c in compliance_checks if c["status"] in ["Non-Compliant", "Needs Attention"]],
+            "applicable_acts": self._get_applicable_acts(doc_type)
+        }
+
+    def _get_applicable_acts(self, doc_type: str) -> List[str]:
+        """Get applicable Indian acts based on document type"""
+        act_mapping = {
+            "employment": [
+                "Industrial Relations Code, 2020",
+                "Payment of Wages Act, 1936",
+                "Employees' Provident Funds Act, 1952"
+            ],
+            "rental": [
+                "Transfer of Property Act, 1882",
+                "Registration Act, 1908"
+            ],
+            "service": [
+                "Indian Contract Act, 1872",
+                "Specific Relief Act, 1963"
+            ],
+            "corporate": [
+                "Companies Act, 2013",
+                "Securities and Exchange Board of India Act, 1992"
             ]
         }
+        
+        for key, acts in act_mapping.items():
+            if key in doc_type.lower():
+                return acts
+        
+        return ["Indian Contract Act, 1872"]
 
     def _generate_specific_summary(self, document_text: str, doc_classification: Dict) -> Dict[str, Any]:
         """Generate document-specific executive summary"""
         
         doc_type = doc_classification.get("document_type", "Legal Document")
         
-        summary_prompt = f"""
-Analyze this {doc_type} and provide a specific executive summary:
+        summary_prompt = f"""Analyze this {doc_type} and provide a specific executive summary:
 
 DOCUMENT TEXT (first 2000 characters):
 {document_text[:2000]}
@@ -567,33 +634,29 @@ Provide analysis in JSON format:
     "executive_summary": "3-4 sentence specific summary of what this document is and its key provisions",
     "key_points": [
         "Specific key point 1 with actual details from document",
-        "Specific key point 2 with actual details from document",
+        "Specific key point 2 with actual details from document", 
         "Specific key point 3 with actual details from document"
     ],
-    "primary_obligations": [
-        "Party 1 obligation based on document content",
-        "Party 2 obligation based on document content"
-    ],
-    "critical_dates": ["Any specific dates or deadlines mentioned"],
-    "financial_terms": ["Any specific monetary amounts or payment terms"],
-    "key_risks_noted": ["Specific risks identified in this document"],
+    "primary_obligations": {{
+        "Party 1": "obligation based on document content",
+        "Party 2": "obligation based on document content"
+    }},
+    "critical_dates": "Any specific dates or deadlines mentioned",
+    "financial_terms": "Any specific monetary amounts or payment terms",
+    "key_risks_noted": "Specific risks identified in this document",
     "document_purpose": "Specific purpose of this document based on content"
 }}
 
-Be specific and reference actual content, not generic templates.
-"""
-        
+Be specific and reference actual content, not generic templates."""
+
         try:
             response = self.gemini_model.generate_content(
                 summary_prompt,
                 generation_config=self.generation_config
             )
-            
             summary_data = self._extract_json_from_response(response.text)
-            
             if summary_data:
                 return summary_data
-        
         except Exception as e:
             logger.warning(f"AI summary generation failed: {e}")
         
@@ -601,31 +664,29 @@ Be specific and reference actual content, not generic templates.
         return {
             "executive_summary": f"This {doc_type} contains {len(document_text.split())} words of legal content with specific provisions and terms applicable to the parties involved.",
             "key_points": [
-                f"Document type identified as: {doc_type}",
+                f"Document type identified as {doc_type}",
                 f"Content length: {len(document_text)} characters",
                 f"Classification confidence: {doc_classification.get('classification_confidence', 0.5):.1%}"
             ],
-            "primary_obligations": [
+            "primary_obligations": {
                 "Obligations defined based on document terms",
                 "Mutual responsibilities as per agreement"
-            ],
+            },
             "document_purpose": f"{doc_type} establishing legal relationship between parties"
         }
 
     def _extract_legal_terms(self, document_text: str) -> List[str]:
         """Extract legal terminology from document"""
-        
         legal_terms = [
             "whereas", "hereby", "heretofore", "hereinafter", "pursuant to",
-            "in consideration of", "subject to", "notwithstanding", "void",
-            "voidable", "enforceable", "binding", "jurisdiction", "governing law",
-            "breach", "default", "remedy", "damages", "liability", "indemnify",
-            "force majeure", "arbitration", "mediation", "dispute resolution"
+            "in consideration of", "subject to", "notwithstanding", "void", "voidable",
+            "enforceable", "binding", "jurisdiction", "governing law", "breach", "default",
+            "remedy", "damages", "liability", "indemnify", "force majeure", "arbitration",
+            "mediation", "dispute resolution"
         ]
         
         found_terms = []
         text_lower = document_text.lower()
-        
         for term in legal_terms:
             if term.lower() in text_lower:
                 found_terms.append(term.title())
@@ -635,11 +696,10 @@ Be specific and reference actual content, not generic templates.
     def _find_statutory_references(self, document_text: str) -> List[Dict[str, str]]:
         """Find references to Indian statutes and sections"""
         
-        # Common Indian acts
         indian_acts = {
             "Indian Contract Act": "1872",
-            "Companies Act": "2013", 
-            "Transfer of Property Act": "1882",
+            "Companies Act": "2013",
+            "Transfer of Property Act": "1882", 
             "Indian Penal Code": "1860",
             "Information Technology Act": "2000",
             "Consumer Protection Act": "2019",
@@ -647,11 +707,10 @@ Be specific and reference actual content, not generic templates.
         }
         
         references = []
-        
         for act, year in indian_acts.items():
             if act.lower() in document_text.lower():
                 references.append({
-                    "act": f"{act} {year}",
+                    "act": f"{act}, {year}",
                     "relevance": "Referenced in document",
                     "context": "Found in document text"
                 })
@@ -659,7 +718,6 @@ Be specific and reference actual content, not generic templates.
         # Look for section references
         section_pattern = r'[Ss]ection\s+(\d+)'
         section_matches = re.findall(section_pattern, document_text)
-        
         for section in section_matches[:3]:  # Limit to first 3
             references.append({
                 "act": "Referenced Section",
@@ -671,7 +729,6 @@ Be specific and reference actual content, not generic templates.
 
     def _generate_cross_agent_insights(self, classification: Dict, entities: List, risks: Dict) -> List[str]:
         """Generate insights from cross-agent analysis"""
-        
         insights = []
         
         doc_type = classification.get("document_type", "")
@@ -680,7 +737,7 @@ Be specific and reference actual content, not generic templates.
         
         insights.append(f"Document classified as {doc_type} with {entity_count} key entities extracted")
         
-        if risk_count > 3:
+        if risk_count >= 3:
             insights.append(f"Multiple risk factors identified ({risk_count} risks) - recommend detailed legal review")
         elif risk_count > 0:
             insights.append(f"Moderate risk profile detected with {risk_count} areas requiring attention")
@@ -688,8 +745,8 @@ Be specific and reference actual content, not generic templates.
             insights.append("Low risk profile - document appears well-structured")
         
         # Entity-based insights
-        monetary_entities = [e for e in entities if e["type"] == "MONETARY_AMOUNT"]
-        if len(monetary_entities) > 2:
+        monetary_entities = [e for e in entities if e['type'] == 'MONETARY_AMOUNT']
+        if len(monetary_entities) >= 2:
             insights.append(f"Multiple financial terms detected ({len(monetary_entities)} amounts) - verify calculation accuracy")
         
         return insights
@@ -697,15 +754,15 @@ Be specific and reference actual content, not generic templates.
     def _extract_json_from_response(self, response_text: str) -> Optional[Dict]:
         """Extract JSON from AI response with multiple methods"""
         
+        # Method 1: Direct JSON parsing
         try:
-            # Method 1: Direct JSON parsing
             return json.loads(response_text)
         except:
             pass
         
+        # Method 2: Extract from code blocks
         try:
-            # Method 2: Extract from code blocks
-            if "```" :
+            if "```":
                 json_start = response_text.find("```json") + 7
                 json_end = response_text.find("```")
                 if json_end > json_start:
@@ -714,33 +771,25 @@ Be specific and reference actual content, not generic templates.
         except:
             pass
         
-        try:
-            # Method 3: Find JSON-like structures
-            json_pattern = r'\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}'
-            matches = re.findall(json_pattern, response_text, re.DOTALL)
-            for match in matches:
-                try:
-                    return json.loads(match)
-                except:
-                    continue
-        except:
-            pass
+        # Method 3: Find JSON-like structures
+        json_pattern = r'\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}'
+        matches = re.findall(json_pattern, response_text, re.DOTALL)
+        for match in matches:
+            try:
+                return json.loads(match)
+            except:
+                continue
         
         return None
 
     def _create_minimal_document_fallback(self) -> Dict[str, Any]:
         """Create fallback for minimal documents"""
-        
         return {
             "document_type": "Text Document",
             "overall_risk_score": 25,
             "compliance_score": 0.5,
             "confidence_score": 0.4,
-            "key_entities": [{
-                "type": "DOCUMENT_NOTE",
-                "value": "Minimal content detected",
-                "confidence": 0.8
-            }],
+            "key_entities": [{"type": "DOCUMENT_NOTE", "value": "Minimal content detected", "confidence": 0.8}],
             "executive_summary": "Document contains minimal content requiring manual review",
             "agents_used": ["DirectDocumentAnalyzer"],
             "processing_time": 1.0,
@@ -750,29 +799,26 @@ Be specific and reference actual content, not generic templates.
 
     def _create_error_fallback_analysis(self, document_text: str, error: str) -> Dict[str, Any]:
         """Create fallback analysis when processing fails"""
-        
         return {
             "document_type": "Legal Document",
             "overall_risk_score": 50,
             "compliance_score": 0.6,
             "confidence_score": 0.5,
-            "key_entities": [{
-                "type": "PROCESSING_NOTE", 
-                "value": f"Analysis completed with limitations",
-                "confidence": 0.7
-            }],
+            "key_entities": [{"type": "PROCESSING_NOTE", "value": f"Analysis completed with limitations", "confidence": 0.7}],
             "executive_summary": f"Document processed successfully. Length: {len(document_text)} characters. Ready for detailed review.",
             "agents_used": ["DirectDocumentAnalyzer", "ComplianceChecker"],
             "processing_time": 2.0,
-            "identified_risks": [{
-                "risk_type": "Processing Limitation",
-                "severity": "Low",
-                "description": "Some analysis features encountered technical limitations"
-            }],
+            "identified_risks": [
+                {
+                    "risk_type": "Processing Limitation",
+                    "severity": "Low",
+                    "description": "Some analysis features encountered technical limitations"
+                }
+            ],
             "key_issues": [],
             "processing_note": error
         }
 
 if __name__ == "__main__":
-    print("🚀 Enhanced Legal Orchestrator Ready!")
-    print("✨ Features: Document-specific analysis, intelligent classification, targeted risk assessment")
+    print("Enhanced Legal Orchestrator Ready!")
+    print("Features: Document-specific analysis, intelligent classification, targeted risk assessment")
